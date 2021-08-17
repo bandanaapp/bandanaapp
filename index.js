@@ -7,11 +7,11 @@ const { Client } = require('pg');
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-  
+
 });
 
 client.connect();
-
+/*
 //postgreSQL testquery
 client.query('SELECT * FROM USERS;', (err, results) => {
   if (err) {
@@ -24,7 +24,7 @@ client.query('SELECT * FROM USERS;', (err, results) => {
   }
   client.end();
 });
-
+*/
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -32,4 +32,17 @@ express()
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+  .get('/db', async (req, res) => {
+    try {
+      const client = await pool.connect()
+      const result = await client.query('SELECT * FROM USERS;');
+      const results = { 'results': (result) ? result.rows : null};
+      res.render('pages/db', results );
+      client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+  })
   
