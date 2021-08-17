@@ -3,7 +3,7 @@ const path = require('path')
 const PORT = process.env.PORT || 5000
 const { Client } = require('pg');
 
-//postgreSQLに接続(SSL)
+//postgreSQL 接続(SSL)
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
@@ -11,10 +11,14 @@ const client = new Client({
 
 client.connect();
 
-//testquery
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
+//postgreSQL testquery
+client.query('SELECT * FROM USERS;', (err, results) => {
+  if (err) {
+    console.log(err.stack);
+  }else{
+    console.log(results.rows[0]);
+  }
+  for (let row of results.rows) {
     console.log(JSON.stringify(row));
   }
   client.end();

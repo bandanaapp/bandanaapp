@@ -1,0 +1,7 @@
+CREATE TABLE users(
+    id CHAR(100) NOT NULL,
+    name VARCHAR(30) NOT NULL,
+    pass CHAR(255) NOT NULL,
+    mail CHAR(255) NOT NULL);
+
+INSERT INTO users(id,name,pass,mail) VALUES('test1','テスト１','testtest','test@test.com');
