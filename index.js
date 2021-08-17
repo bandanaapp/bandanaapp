@@ -1,17 +1,16 @@
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
-const { Client } = require('pg');
+const { Pool } = require('pg');
 const app = express();
 
 //postgreSQL 接続(SSL)
-const client = new Client({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: true,
-
+  ssl: { rejectUnauthorized: false }
 });
 
-client.connect();
+
 /*
 //postgreSQL testquery
 client.query('SELECT * FROM USERS;', (err, results) => {
@@ -40,7 +39,7 @@ app.get('/db', async (req, res) => {
       const client = await pool.connect()
       const result = await client.query('SELECT * FROM USERS;');
       const results = { 'results': (result) ? result.rows : null};
-      res.render('pages/db', results );
+      res.render('pages/db.ejs', results );
       client.release();
     } catch (err) {
       console.error(err);
@@ -48,3 +47,5 @@ app.get('/db', async (req, res) => {
     }
   })
   
+
+  app.listen(8080);
