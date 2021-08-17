@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
 const { Client } = require('pg');
+const app = express();
 
 //postgreSQL 接続(SSL)
 const client = new Client({
@@ -30,10 +31,11 @@ express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
+  /*.get('/', (req, res) => res.render('pages/index'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+*/
 
-  .get('/db', async (req, res) => {
+app.get('/db', async (req, res) => {
     try {
       const client = await pool.connect()
       const result = await client.query('SELECT * FROM USERS;');
