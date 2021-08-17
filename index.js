@@ -3,6 +3,7 @@ const path = require('path')
 const PORT = process.env.PORT || 5000
 const { Pool } = require('pg');
 const app = express();
+const session = require('express-session');
 
 //postgreSQL 接続(SSL)
 const pool = new Pool({
@@ -10,31 +11,21 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+app.use(
+  session({
+    secret: 'my_secret_key',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-/*
-//postgreSQL testquery
-client.query('SELECT * FROM USERS;', (err, results) => {
-  if (err) {
-    console.log(err.stack);
-  }else{
-    console.log(results.rows[0]);
-  }
-  for (let row of results.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
-});
-*/
-
-express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
   
   
+
 app.get('/', (req, res) => res.render('pages/index'));
-
-
 
 app.get('/db', async (req, res) => {
     try {
@@ -50,4 +41,4 @@ app.get('/db', async (req, res) => {
   });
   
 
-  
+  app.listen(8080);
